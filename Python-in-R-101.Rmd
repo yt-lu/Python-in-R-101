@@ -1,0 +1,51 @@
+---
+title: "Run Python in R Markdown"
+subtitle: "A Minimal Demo"
+output:
+    html_document
+---
+```{r setup, include=FALSE}
+setwd("~/Dropbox/Mercer/Talks/TechDocs") # Set the directory of this R Markdown file.
+library(reticulate)
+use_python("python/bin/python3") # This is the Python virtual environment folder (Step 2 in the guide https://support.rstudio.com/hc/en-us/articles/360023654474-Installing-and-Configuring-Python-with-RStudio)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+This is a R chunk. No output. 
+
+```{r echo=TRUE}
+x <- 1
+```
+
+This is a python chunk (with its output, i.e., the line starting with ##), in which we can call r object by [r.VariableName].
+```{python echo=TRUE}
+y = 2
+print(r.x)
+```
+
+Now back to a R chunk (with its output, i.e., the line starting with ##), in which we can call any Python object by [py$VariableName]
+```{r echo=TRUE}
+print(py$y)
+```
+
+A 3D picture produced by a Python chunk.
+```{python echo=FALSE, out.width = '100%', fig.align='center'}
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+import numpy as np
+x = np.linspace(0, 1, 50)
+y = 1 - x
+z = 1 - x**2
+fig = plt.figure(figsize=(4,4))
+ax = plt.subplot(1, 1, 1, projection='3d')
+ax.plot(x, y, np.zeros(50), 'b-')
+ax.plot(x, np.zeros(50), z, 'r-')
+ax.plot(x, y , z, 'b-')
+ax.plot([0, 0], [0, 1],[1, 1], 'b-')
+ax.plot([0, 0], [1, 1],[0, 1], 'b-')
+ax.view_init(30, 45) #alpha, theta
+#ax.axes.get_xaxis().set_ticklabels([])
+#ax.axes.get_yaxis().set_ticklabels([])
+#ax.axes.get_zaxis().set_ticklabels([])
+plt.show()
+```
